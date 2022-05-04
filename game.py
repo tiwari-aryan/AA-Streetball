@@ -19,11 +19,22 @@ song_sound = [
     pygame.mixer.Sound("audio/Songs/Cold Embrace.wav"),
 ]
 font = pygame.font.SysFont("Calibri", 100)
+font_1 = pygame.font.SysFont("Calibri", 40)
 title_font = pygame.font.SysFont("Cambria", 200)
 writing = font.render("Possession Change...", False, (255, 255, 0))
 title_1 = title_font.render("AA Streetball", False, (50, 120, 50))
 title_2 = title_font.render("AA Streetball", False, (193, 66, 63))
 title_3 = title_font.render("AA Streetball", False, (13, 20, 211))
+p1_team_text = font_1.render(
+    "Player 1, click on the character you would like to play with and press Enter to lock in your character",
+    False,
+    (255, 255, 100),
+)
+p2_team_text = font_1.render(
+    "Player 2 Press Enter to lock in your character, and start the game",
+    False,
+    (255, 255, 100),
+)
 p1_game_win_text = font.render("Player 1 Won!", False, (255, 255, 100))
 p2_game_win_text = font.render("Player 2 Won!", False, (255, 255, 100))
 court = pygame.image.load("images/Court.png")
@@ -36,10 +47,12 @@ def main():
     start_y = 0
     i = 1
     title_count = 1
+    p1_movement = 1
+    p2_movement = 2
     p1 = Player(774, 598, pascal, 6, 6, 50, 100, True, 1)
     p2 = Player(874, 543, scottie, 6, 6, 50, 100, False, 2)
-    p1.player_movement = 1
-    p2.player_movement = 2
+    p1_team_select = False
+    p2_team_select = False
     keys = pygame.key.get_pressed()
     run = True
     in_title = True
@@ -96,11 +109,32 @@ def main():
                 in_options = True
                 in_title = False
         elif in_team == True:
-            win.blit(pascal, (700, 250))
-            win.blit(scottie, (700, 830))
-            if keys[pygame.K_RETURN]:
-                in_game = True
-                in_team = False
+            win.blit(court, (0, 0))
+            win.blit(pascal, (500, 250))
+            win.blit(scottie, (500, 830))
+            pascal_button = Button(500, 250, 575, 340, False)
+            scottie_button = Button(500, 830, 580, 920, False)
+            pascal_button.on_click()
+            scottie_button.on_click()
+            if p1_team_select == True:
+                win.blit(p1_team_text, (400, 100))
+                if keys[pygame.K_RETURN]:
+                    in_game = True
+                    in_team = False
+                if keys[pygame.K_ESCAPE]:
+                    p1_team_select = False
+            elif pascal_button.click == True:
+                p1.player_movement = 1
+                p1_movement = 1
+                p2.player_movement = 2
+                p2_movement = 2
+                p1_team_select = True
+            elif scottie_button.click == True:
+                p2.player_movement = 1
+                p2_movement = 1
+                p1.player_movement = 2
+                p1_movement = 2
+                p1_team_select = True
             pygame.display.update()
             pygame.display.flip()
         elif in_options == True:
@@ -174,38 +208,38 @@ def main():
             if p1.reset_possession:
                 p1.reset_possession = False
                 placement_score = p1.score
-                p1 = Player(774, 598, pascal, 6, 6, 50, 100, True, 1)
+                p1 = Player(774, 598, pascal, 6, 6, 50, 100, True, p1_movement)
                 p1.score = placement_score
                 placement_score = p2.score
-                p2 = Player(874, 543, scottie, 6, 6, 50, 100, False, 2)
+                p2 = Player(874, 543, scottie, 6, 6, 50, 100, False, p2_movement)
                 p2.score = placement_score
             if p2.reset_possession:
                 p2.reset_possession = False
                 placement_score = p1.score
-                p1 = Player(874, 598, pascal, 6, 6, 50, 100, False, 1)
+                p1 = Player(874, 598, pascal, 6, 6, 50, 100, False, p1_movement)
                 p1.score = placement_score
                 placement_score = p2.score
-                p2 = Player(774, 543, scottie, 6, 6, 50, 100, True, 2)
+                p2 = Player(774, 543, scottie, 6, 6, 50, 100, True, p2_movement)
                 p2.score = placement_score
                 p1.player_movement = 1
                 p2.player_movement = 2
             if p1.possession_change:
                 p2.reset_possession = False
                 placement_score = p1.score
-                p1 = Player(874, 598, pascal, 6, 6, 50, 100, False, 1)
+                p1 = Player(874, 598, pascal, 6, 6, 50, 100, False, p1_movement)
                 p1.score = placement_score
                 placement_score = p2.score
-                p2 = Player(774, 543, scottie, 6, 6, 50, 100, True, 2)
+                p2 = Player(774, 543, scottie, 6, 6, 50, 100, True, p2_movement)
                 p2.score = placement_score
                 win.blit(writing, (200, 500))
                 time.sleep(1)
             if p2.possession_change:
                 p1.reset_possession = False
                 placement_score = p1.score
-                p1 = Player(774, 598, pascal, 6, 6, 50, 100, True, 1)
+                p1 = Player(774, 598, pascal, 6, 6, 50, 100, True, p1_movement)
                 p1.score = placement_score
                 placement_score = p2.score
-                p2 = Player(874, 543, scottie, 6, 6, 50, 100, False, 2)
+                p2 = Player(874, 543, scottie, 6, 6, 50, 100, False, p2_movement)
                 p2.score = placement_score
                 win.blit(writing, (200, 500))
                 time.sleep(1)
