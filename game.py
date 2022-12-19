@@ -160,7 +160,8 @@ def main():
             win.blit(pygame.image.load("images/Home_Screen.png"), (0, 0))
             play_game.draw(win)
             music.draw(win)
-
+        elif in_how_to_play == True:
+            win.blit(pygame.image.load("images/How_to_Play.png"))
         elif in_music:
             skip_song = Button(1020, 900, 1475, 980, False)
             rewind_song = Button(525, 900, 1035, 980, False)
